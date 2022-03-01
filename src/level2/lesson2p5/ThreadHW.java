@@ -11,8 +11,9 @@ public class ThreadHW {
         firstMethod();
         secondMethod();
     }
-
+// Заполнение большого массивазначениями по формуле и подсчёт полного времени
     protected static void firstMethod() {
+        System.out.println("First method start:");
         Arrays.fill(arr, 1.0f);
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < arr.length; i++) {
@@ -22,8 +23,9 @@ public class ThreadHW {
         System.out.println("One thread time: " + (System.currentTimeMillis() - startTime) + " ms.");
         System.out.println();
     }
-
+// Одновременное заполнение двух половинок большого массива в двух потоках и подсчёт времени
     protected static void secondMethod() {
+        System.out.println("Second method start:");
         Arrays.fill(arr, 1.0f);
         float[] leftHalf = new float[HALF];
         float[] rightHalf = new float[HALF];
@@ -32,31 +34,48 @@ public class ThreadHW {
         System.arraycopy(arr, 0, leftHalf, 0, HALF);
         System.arraycopy(arr, HALF, rightHalf, 0, HALF);
 
-        Thread thread1 = new Thread(() -> {
-            for (int i = 0; i < leftHalf.length; i++) {
-                arr[i] = (float) (arr[i] *
-                        Math.sin(0.2f + i / 5) *
-                        Math.cos(0.2f + i / 5) *
-                        Math.cos(0.4f + i / 2));
+        Thread motherThread = new Thread(() -> {
+            System.out.println("This is incredible mother's thread!");
+
+            Thread thread1 = new Thread(() -> {
+                System.out.println("First thread is move");
+                for (int i = 0; i < leftHalf.length; i++) {
+                    if (i == leftHalf.length-1){
+                        System.out.println("First thread is done.");
+                    }
+                    arr[i] = (float) (arr[i] *
+                            Math.sin(0.2f + i / 5) *
+                            Math.cos(0.2f + i / 5) *
+                            Math.cos(0.4f + i / 2));
+                }
+            });
+            Thread thread2 = new Thread(() -> {
+                System.out.println("Second thread is move");
+                for (int i = 0; i < rightHalf.length; i++) {
+                    if (i == rightHalf.length-1){
+                        System.out.println("Second thread is done.");
+                    }
+                    arr[i] = (float) (arr[i] *
+                            Math.sin(0.2f + i / 5) *
+                            Math.cos(0.2f + i / 5) *
+                            Math.cos(0.4f + i / 2));
+                }
+            });
+
+            try {
+                thread1.start();
+                thread2.start();
+                thread1.join();
+                thread2.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         });
-        Thread thread2 = new Thread(() -> {
-            for (int i = 0; i < rightHalf.length; i++) {
-                arr[i] = (float) (arr[i] *
-                        Math.sin(0.2f + i / 5) *
-                        Math.cos(0.2f + i / 5) *
-                        Math.cos(0.4f + i / 2));
-            }
-        });
-        thread1.start();
+
         try {
-            thread1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        thread2.start();
-        try {
-            thread2.join();
+            motherThread.start();
+            motherThread.join();
+            System.out.println("Mother's thread is done.");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -65,6 +84,6 @@ public class ThreadHW {
         System.arraycopy(leftHalf, 0, aR2, 0, leftHalf.length);
         System.arraycopy(rightHalf, 0, aR2, leftHalf.length, rightHalf.length);
 
-        System.out.println("Time in threads: " + (System.currentTimeMillis() - startTime) + " ms.");
+        System.out.println("Calculation сompleted in " + (System.currentTimeMillis() - startTime) + " ms.");
     }
 }
