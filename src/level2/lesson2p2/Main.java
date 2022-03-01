@@ -37,11 +37,15 @@ Java. Уровень 2
 public class Main {
 
     public static void main(String[] args) {
-        String[][] array = {{"1","F","3","6"},{"A","1","2","4"},{"4","3","N","1"}};
+        String[][] array = {{"1","F","3","6"},
+                            {"A","1","2","4"},
+                            {"4","3","N","1"},
+                            {"4","3","N","1"}
+        };
 //        String[][] t = new String[3][5];
         print2Array(array);
         try {
-            metod1 (array);
+            checkSizeArray(array);
         } catch (MyArraySizeException e){
             System.out.println("Ошибка размерности массива! "+e);
         }
@@ -50,16 +54,16 @@ public class Main {
         }
     }
 
-    public static void metod1(String[][] s) throws MyArraySizeException, MyArrayDataException {
-        String[][] o = new String[4][4];
-        if (!(s.length == o.length)) throw new MyArraySizeException("Размер массива должен быть 4*4");
+    public static void checkSizeArray(String[][] arr)  {
+        String[][] ref = new String[4][4];
+        if (!(arr.length == ref.length)) throw new MyArraySizeException("Размер массива должен быть 4*4");
         int sum = 0;
-        for (int i=0; i<s.length; i++){
-            for (int j=0; j<s[i].length; j++) {
+        for (int i=0; i<arr.length; i++){
+            for (int j=0; j<arr[i].length; j++) {
                 try {
-                    sum += getArrInt(s[i][j], i, j);
+                    sum += getArrInt(arr[i][j], i, j);
                 } catch (MyArrayDataException e) {
-                    System.out.println(e.toString());
+                    System.out.println(e);
                 }
             }
         }        System.out.println("Сумма числовых элементов массива = "+sum);
@@ -69,7 +73,8 @@ public class Main {
     {
         int val;
         if (isDigital(str)) val = Integer.parseInt(str);
-        else throw  new MyArrayDataException("Элемент "+str+" по индексу "+"("+i+")"+"("+j+") не приведён к числовому формату");
+        else
+            throw new MyArrayDataException("Элемент " + str + " по индексу " + "(" + i + ")" + "(" + j + ") не приведён к числовому формату");
         return val;
     }
 
