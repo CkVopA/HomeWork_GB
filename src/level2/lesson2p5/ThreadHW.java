@@ -84,6 +84,6 @@ public class ThreadHW {
         System.arraycopy(leftHalf, 0, aR2, 0, leftHalf.length);
         System.arraycopy(rightHalf, 0, aR2, leftHalf.length, rightHalf.length);
 
-        System.out.println("Calculation сompleted in " + (System.currentTimeMillis() - startTime) + " ms.");
+        System.out.println("Calculation completed in " + (System.currentTimeMillis() - startTime) + " ms.");
     }
 }
