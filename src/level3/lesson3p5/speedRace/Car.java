@@ -1,5 +1,8 @@
 package level3.lesson3p5.speedRace;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class Car implements Runnable {
     private static int CARS_COUNT;
     private Race race;
@@ -19,8 +22,9 @@ public class Car implements Runnable {
         this.name = "Участник #" + CARS_COUNT;
         try {
             System.out.println(this.name + " готовится");
-            Thread.sleep(500 + (int)(Math.random() * 5000));
+            Thread.sleep(500 + (int)(Math.random() * 300));
             System.out.println(this.name + " готов");
+
         } catch (Exception e) {
             e.printStackTrace();
         }

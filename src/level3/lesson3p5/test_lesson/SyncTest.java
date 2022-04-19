@@ -8,10 +8,10 @@ public class SyncTest {
     public static void main(String[] args) throws InterruptedException {
 
     //    semaphoreTest();
-    //    countDownLatchTest();
+        countDownLatchTest();
     //    cyclicBarrierTest();
 
-        lockTest();
+    //    lockTest();
 
 
     }
