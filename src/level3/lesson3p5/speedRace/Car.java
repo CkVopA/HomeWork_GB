@@ -5,6 +5,7 @@ import java.util.concurrent.Executors;
 
 public class Car implements Runnable {
     private static int CARS_COUNT;
+
     private Race race;
     private int speed;
     private String name;
@@ -13,6 +14,10 @@ public class Car implements Runnable {
     }
     public int getSpeed() {
         return speed;
+    }
+
+    public static int getCarsCount() {
+        return CARS_COUNT;
     }
 
     public Car(Race race, int speed) {
