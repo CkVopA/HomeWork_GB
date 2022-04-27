@@ -1,5 +1,7 @@
 package level3.lesson3p5.speedRace;
 
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,8 +39,9 @@ public class Car implements Runnable {
     @Override
     public void run() {
 
-        for (int i = 0; i < race.getStages().size(); i++) {
-            race.getStages().get(i).go(this);
-        }
+            for (int i = 0; i < race.getStages().size(); i++) {
+                    race.getStages().get(i).go(this);
+            }
+
     }
 }

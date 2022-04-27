@@ -4,6 +4,7 @@ import java.util.concurrent.*;
 
 public class MainClass {
     public static final int CARS_COUNT = 4;
+
     public static void main(String[] args) throws InterruptedException, BrokenBarrierException {
 
 
@@ -16,10 +17,21 @@ public class MainClass {
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
         reversCount(3);
 
-
-            for (int i = 0; i < cars.length; i++) {
-                new Thread(cars[i]).start();
-            }
+        CountDownLatch countDownLatch = new CountDownLatch(CARS_COUNT);
+        ExecutorService exec = Executors.newFixedThreadPool(CARS_COUNT);
+        for (int i = 0; i < cars.length; i++) {
+            //new Thread(cars[i]).start();
+            int k = i;
+            exec.execute(() -> {
+              //  try {
+                    cars[k].run();
+              //  } finally {
+                    countDownLatch.countDown();
+              //  }
+            });
+        }
+        countDownLatch.await();
+        exec.shutdown();
 
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
     }
@@ -28,11 +40,11 @@ public class MainClass {
         CyclicBarrier cb = new CyclicBarrier(1);
         CountDownLatch countDownLatch = new CountDownLatch(CARS_COUNT);
 
-        new Thread(()->{
+        new Thread(() -> {
             ExecutorService pool = Executors.newFixedThreadPool(CARS_COUNT);
             for (int i = 0; i < cars.length; i++) {
                 int k = i;
-                pool.execute(()->{
+                pool.execute(() -> {
                     cars[k] = new Car(race, 20 + (int) (Math.random() * 10));
                     countDownLatch.countDown();
                 });
@@ -47,7 +59,7 @@ public class MainClass {
     private static void reversCount(int n) throws InterruptedException {
         int count = n;
         while (count >= 1) {
-            System.out.println(">"+ count +"<");
+            System.out.println(">" + count + "<");
             Thread.sleep(1000);
             count--;
         }
