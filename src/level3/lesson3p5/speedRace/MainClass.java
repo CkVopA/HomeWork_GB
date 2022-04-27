@@ -20,14 +20,10 @@ public class MainClass {
         CountDownLatch countDownLatch = new CountDownLatch(CARS_COUNT);
         ExecutorService exec = Executors.newFixedThreadPool(CARS_COUNT);
         for (int i = 0; i < cars.length; i++) {
-            //new Thread(cars[i]).start();
             int k = i;
             exec.execute(() -> {
-              //  try {
                     cars[k].run();
-              //  } finally {
                     countDownLatch.countDown();
-              //  }
             });
         }
         countDownLatch.await();

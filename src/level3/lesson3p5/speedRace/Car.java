@@ -1,9 +1,7 @@
 package level3.lesson3p5.speedRace;
 
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.sql.Time;
+import java.util.concurrent.TimeUnit;
 
 public class Car implements Runnable {
     private static int CARS_COUNT;
@@ -18,10 +16,6 @@ public class Car implements Runnable {
         return speed;
     }
 
-    public static int getCarsCount() {
-        return CARS_COUNT;
-    }
-
     public Car(Race race, int speed) {
         this.race = race;
         this.speed = speed;
@@ -31,17 +25,14 @@ public class Car implements Runnable {
             System.out.println(this.name + " готовится");
             Thread.sleep(500 + (int)(Math.random() * 300));
             System.out.println(this.name + " готов");
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     @Override
     public void run() {
-
             for (int i = 0; i < race.getStages().size(); i++) {
                     race.getStages().get(i).go(this);
             }
-
     }
 }
