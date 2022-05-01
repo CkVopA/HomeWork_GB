@@ -43,7 +43,7 @@ public class MainClass {
     }
 
     private static void reversCountForStart() throws InterruptedException {
-        int count = 1;
+        int count = 3;
         while (count > 0) {
             System.out.print(">" + count + "<   ");
             Thread.sleep(1000);
