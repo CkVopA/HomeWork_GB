@@ -12,27 +12,17 @@ public class MainClass {
         Race race = new Race(new Road(60), new Tunnel(), new Road(40));
         Car[] cars = new Car[CARS_COUNT];
 
-        preparing(race, cars);
+        preparingForRacing(race, cars);
 
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
-        reversCount(3);
+        reversCountForStart();
 
-        CountDownLatch countDownLatch = new CountDownLatch(CARS_COUNT);
-        ExecutorService exec = Executors.newFixedThreadPool(CARS_COUNT);
-        for (int i = 0; i < cars.length; i++) {
-            int k = i;
-            exec.execute(() -> {
-                    cars[k].run();
-                    countDownLatch.countDown();
-            });
-        }
-        countDownLatch.await();
-        exec.shutdown();
+        startRacing(cars);
 
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
     }
 
-    private static void preparing(Race race, Car[] cars) throws InterruptedException, BrokenBarrierException {
+    private static synchronized void preparingForRacing(Race race, Car[] cars) throws InterruptedException, BrokenBarrierException {
         CyclicBarrier cb = new CyclicBarrier(1);
         CountDownLatch countDownLatch = new CountDownLatch(CARS_COUNT);
 
@@ -48,18 +38,38 @@ public class MainClass {
             pool.shutdown();
         }).start();
 
-        countDownLatch.await();
-        cb.await();
+        countDownLatch.await(); // ожидание завершения каждого потока создания машины
+        cb.await();  // ожидание окончания безымянного потока Thread
     }
 
-    private static void reversCount(int n) throws InterruptedException {
-        int count = n;
-        while (count >= 1) {
-            System.out.println(">" + count + "<");
+    private static void reversCountForStart() throws InterruptedException {
+        int count = 1;
+        while (count > 0) {
+            System.out.print(">" + count + "<   ");
             Thread.sleep(1000);
             count--;
         }
+        System.out.println();
         System.out.println("START!!!");
     }
-}
 
+    private static void startRacing(Car[] cars) throws InterruptedException {
+        CountDownLatch countDownLatch = new CountDownLatch(CARS_COUNT);
+        ExecutorService exec = Executors.newFixedThreadPool(CARS_COUNT);
+
+        for (int i = 0; i < cars.length; i++) {
+            int k = i;
+            exec.execute(() -> {
+                cars[k].run();
+                countDownLatch.countDown();
+
+                if (countDownLatch.getCount() == CARS_COUNT-1){
+                    System.out.println(cars[k].getName()+" is WINNER");
+                }
+                Thread.yield();
+            });
+        }
+        countDownLatch.await();
+        exec.shutdown();
+    }
+}

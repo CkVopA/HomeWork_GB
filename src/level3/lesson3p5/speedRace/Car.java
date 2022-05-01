@@ -1,14 +1,11 @@
 package level3.lesson3p5.speedRace;
 
-import java.sql.Time;
-import java.util.concurrent.TimeUnit;
-
 public class Car implements Runnable {
     private static int CARS_COUNT;
 
-    private Race race;
-    private int speed;
-    private String name;
+    private final Race race;
+    private final int speed;
+    private final String name;
     public String getName() {
         return name;
     }
@@ -31,8 +28,8 @@ public class Car implements Runnable {
     }
     @Override
     public void run() {
-            for (int i = 0; i < race.getStages().size(); i++) {
-                    race.getStages().get(i).go(this);
-            }
+        for (Stage stage : race.getStages()) {
+            stage.go(this);
+        }
     }
 }
